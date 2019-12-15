@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../Partials/head.ejs %>
+</head>
+
+<body id="page-top" ng-app="myApp" ng-controller="myAppCntrl" ng-init="initController()">
+<div id="wrapper">
+    <!-- Sidebar -->
+    <% include ../Partials/sidebar.ejs %>
+    <!--End Sidebar -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <!-- TopBar -->
+            <% include ../Partials/navbar.ejs %>
+            <!-- Topbar -->
+            <!-- Container Fluid-->
+            <div class="container-fluid" id="container-wrapper">
+
+                <div class="row mr-1">
+                    <div class="col text-right">
+                        <button type="button" class="btn btn-primary" ng-click="openModal('add')">
+                            Add Student
+                        </button>
+                    </div>
+                </div>
+                <br>
+                <div class="example ml-2">
+                    <div class="bootstrap-table">
+                        <div class="fixed-table-toolbar">
+                            <!--<div class="columns columns-right btn-group float-right">-->
+                            <!--<button class="btn btn-secondary btn-icon waves-effect waves-classic"-->
+                            <!--type="button" name="refresh" aria-label="refresh" title="Refresh"-->
+                            <!--ng-click="getAllLabour()"><i-->
+                            <!--class="icon md-refresh"></i></button>-->
+                            <!--<button class="btn btn-success btn-icon waves-effect waves-classic"-->
+                            <!--type="button" name="toggle" aria-label="toggle" title="Excel Export"-->
+                            <!--ng-click="exportToExcel('#smart-table')"><i-->
+                            <!--class="fa fa-save"></i></button>-->
+                            <!--<div class="keep-open btn-group" title="Records Per Page">-->
+                            <!--<div class="dropdown">-->
+                            <!--<button type="button" aria-label="columns"-->
+                            <!--class="btn btn-secondary dropdown-toggle waves-effect waves-classic p-2"-->
+                            <!--data-toggle="dropdown" aria-expanded="false"><i-->
+                            <!--class="fa fa-bars"></i>-->
+                            <!--<span class="caret"></span></button>-->
+                            <!--<div class="dropdown-menu dropdown-menu-right">-->
+                            <!--<button class="dropdown-item" type="button"-->
+                            <!--ng-click="recordsPerPage = 10">10-->
+                            <!--</button>-->
+                            <!--<button class="dropdown-item" type="button"-->
+                            <!--ng-click="recordsPerPage = 20">20-->
+                            <!--</button>-->
+                            <!--<button class="dropdown-item" type="button"-->
+                            <!--ng-click="recordsPerPage = 30">30-->
+                            <!--</button>-->
+                            <!--<button class="dropdown-item" type="button"-->
+                            <!--ng-click="recordsPerPage = labour.length">All-->
+                            <!--</button>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="float-right search"><input class="form-control input-icon" type="text"-->
+                            <!--placeholder="Search" ng-model="searchData">-->
+                            <!--</div>-->
+
+                        </div>
+                    </div>
+                    <br><br><br>
+                    <div class="clearfix"></div>
+                    <div class="table-responsive">
+                        <table st-table="displayedCollection" st-safe-src="students" id="smart-table"
+                               class="table table-hover table-center table-sm table-bordered table-striped text-center text-nowrap">
+                            <thead>
+                            <tr>
+                                <th st-sort="FirstName" class="sortable asc">First Name</th>
+                                <th st-sort="LastName" class="sortable asc">Last Name</th>
+                                <th st-sort="Department.DepartmentName" class="sortable asc">Department</th>
+                                <th st-sort="IsVerified" class="sortable asc">Status</th>
+                                <th>Settings</th>
+                            </tr>
+                            <tr class="bg-light">
+                                <td>
+                                    <input type="text" st-search="FirstName"
+                                           placeholder="Search"
+                                           class="input-sm form-control">
+                                </td>
+                                <td>
+                                    <input type="text" st-search="LastName"
+                                           placeholder="Search"
+                                           class="input-sm form-control">
+                                </td>
+                                <td>
+                                    <input type="text" st-search="Department.DepartmentName"
+                                           placeholder="Search"
+                                           class="input-sm form-control">
+                                </td>
+                                <td></td>
+                                <td></td>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td class="text-center" colspan="13" ng-if="loading">
+                                    <div class="loader">Loading...</div>
+                                    <h6>Loading...</h6>
+                                </td>
+                            </tr>
+                            <tr class="no-records-found" ng-if="labour.length == 0">
+                                <td colspan="13">No matching records found</td>
+                            </tr>
+                            <tr st-select-row="row" st-select-mode="multiple"
+                                ng-repeat="student in displayedCollection |filter: searchData" ng-cloak>
+                                <td>{{student.FirstName}}</td>
+                                <td>{{student.LastName}}</td>
+                                <td>{{student.Department.DepartmentName}}</td>
+                                <td>
+                                    <button ng-class="{'btn-success': student.IsVerified, 'btn-danger': !student.IsVerified}" ng-click="approveStudent(student.UserID, !student.IsVerified)"
+                                            style="border: 0.5px solid;border-radius: 30px;"><i
+                                                class="fa fa-edit text-success" aria-hidden="true"></i></button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-xl" ng-click="openModal('edit', student)"
+                                            style="border: 0.5px solid;border-radius: 30px;"><i
+                                                class="fa fa-edit text-success" aria-hidden="true"></i></button>
+                                    <button class="btn btn-xl" ng-click="deleteStudent(student.UserID)"
+                                            style="border: 0.5px solid;border-radius: 30px"><i
+                                                class="fa fa-trash text-danger" aria-hidden="true"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                        </table>
+                    </div>
+
+                    <!--Page Content Start Here-->
+                    <!--End Of Page Content-->
+                </div>
+                <!---End Of Container Fluid-->
+            </div>
+            <!-- Footer -->
+            <!-- Footer -->
+        </div>
+    </div>
+    <!-- Scroll to top -->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <% include ../Partials/bodyScriptLoader.ejs %>
+    <% include modal.ejs %>
+    <script>
+        <% include ng-app.js %>
+    </script>
+</body>
+
+</html>
